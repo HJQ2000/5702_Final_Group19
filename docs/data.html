@@ -23,7 +23,7 @@
 <meta name="author" content="Jingqi Huang, Shaonan Wang, Baochan Jiang" />
 
 
-<meta name="date" content="2022-10-29" />
+<meta name="date" content="2022-11-01" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -111,6 +111,11 @@
 <div id="sources" class="section level2 hasAnchor" number="3.1">
 <h2><span class="header-section-number">3.1</span> Sources<a href="data.html#sources" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p><a href="https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i" class="uri">https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i</a></p>
+<p>We’d like to find integrated data sets from the official website for research. Such data is more comprehensive and accurate, and it is also conducive to our data processing and analysis. Thus we choose NYC OpenData as our data sources. We tried to find data related to violence in New York City, so we decided to use complaint data of crime in NYC. The data is provided and maintained by the New York Police Department (NYPD), owned by NYC OpenData. This data is manually extracted every quarter and reviewed by the NYPD. Each record represents a criminal complaint in NYC and includes information about the type of crime, the location and time of enforcement. It can be directly downloaded from the NYC OpenData website in the CSV format, so we can simply import the CSV file. The dataset contains valid felony, misdemeanor, and violation crimes reported to the NYPD from 2006 to the end of 2019. We download the dataset in a .csv file, and filter out earlier complaints before 2016. If we have any questions about the data, we can send a note to NYC OpenData (NYC Open Data - Contact Us (<a href="https://opendata.cityofnewyork.us/engage/" class="uri">https://opendata.cityofnewyork.us/engage/</a>)).</p>
+<p>Known issues relating to data quality:
+The dataset contains some null values, because the data was not collected or not available at the time of report. This may lead to bias in our study of the distribution of the data.
+The dataset is released based on the date the incident was reported, but some crimes may have occurred years before they were reported.
+Some crimes that were not able to be geo-coded have been located as occurring at the police station house within the precinct of occurrence. This will cause a certain bias in the geographical analysis, but this bias can be avoided by appropriately expanding the geographical scope when grouping.</p>
 </div>
 <div id="cleaning-transformation" class="section level2 hasAnchor" number="3.2">
 <h2><span class="header-section-number">3.2</span> Cleaning / transformation<a href="data.html#cleaning-transformation" class="anchor-section" aria-label="Anchor link to header"></a></h2>
