@@ -1,1 +1,167 @@
 # Results
+
+Here, we analyze each variable one by one to see how the crime rate changes under different categories.
+
+
+```{r}
+data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
+```
+
+```{r}
+# package
+library(ggplot2)
+library(tidyverse)
+library(gridExtra)
+library(vcd)
+library(grid)
+```
+
+
+## Variables
+
+### RPT_DT
+
+Variable "RPT_DT" is the date that the event was reported to police.
+
+From the Time Series plot, we found that the year-to-year crime trends were similar, with lower numbers at the beginning and end of the year and higher numbers in the middle of the year. 
+
+```{r}
+t6<-as.data.frame(table(data$RPT_DT))
+t6$Var1<-as.Date(t6$Var1,"%m/%d/%Y")
+ggplot(t6, aes(x=Var1, y=Freq)) +
+  geom_line()
+```
+
+Therefore, we break down the number of crimes by month. Crimes are higher from May to October and highest in July, lowest in February.
+
+```{r}
+data$month<-str_sub(data$RPT_DT,1,2)
+barplot(table(data$month))
+```
+
+### OFNS_DESC
+
+Variable "OFNS_DESC" is the crime description of corresponding to the offense event. 
+
+As we can see from the Cleveland dot plot below, in the New York area, the most committed crime was "Petit Larceny". Appeared more than 200,000 times from 2017 to 2019. Besides, the crimes of harrassment also exceed 200,000 times and crimes of assault & related offenses, criminal mischief, grand larceny exceed 100,000 times. These were the types of crimes that occurred the most during the three-year period. They are sudden crimes and mainly threaten personal financial security.
+
+```{r}
+a<-as.data.frame(table(data$OFNS_DESC)) # Count the number of crimes under the crime category
+colnames(a)<-c("offense","Freq")
+ggplot(a,aes(x=Freq,y=reorder(offense,Freq)))+
+  geom_point()+
+  xlab("crime counts")+
+  ylab("offense type")
+```
+
+### LAW_CAT_CD, BORO_NM
+
+Variable "LAW_CAT_CD" is the level of offense, it contains felony, misdemeanor and violation. Variable "BORO_NM" is the name of the borough in which the incident occurred.
+
+As we can see from the Horizontal Stacked Bar chart, Brooklyn has the most crimes and Staten Island has the least. This may be caused by the population gap, but still reminds us of the security situation in different regions. At the same time, from the perspective of crime level, most crimes are misdemeanors, and the number of serious crimes is second. But in terms of seriousness, felony causes greater personal harm and social impact, so we need to pay more attention to its data. In terms of numbers, the Brooklyn area had the highest number of felony crimes. But in terms of proportion, the proportion of felony crimes in each region is near 20%. 
+
+
+```{r}
+t1<-as.data.frame(table(data$BORO_NM,data$LAW_CAT_CD))
+t1<-t1[t1$Var1!="",]
+ggplot(t1, aes(x = Freq ,y=reorder(Var1,Freq),fill=Var2)) + 
+  geom_bar(stat='identity')+
+  ylab("crime counts")+
+  xlab("Borough")
+```
+
+### PREM_TYP_DESC
+
+Variable "PREM_TYP_DESC" is specific description of where the crime occurred, e.g. grocery store, home, street, etc.
+
+The most crimes occurred on the street, followed by residential apartment house, with more than 300,000 crimes during three years. 
+
+
+```{r}
+b<-as.data.frame(table(data$PREM_TYP_DESC))
+colnames(b)<-c("premise","Freq")
+ggplot(b,aes(x=Freq,y=reorder(premise,Freq)))+
+  geom_point()+
+  ylab("crime counts")+
+  xlab("premise")
+```
+
+### Age_group
+
+This part contains two variables "SUSP_AGE_GROUP" and "VIC_AGE_GROUP". These records the ages of suspects and victims of offense, helping us better understand the characteristics of suspects and helping us identify potential threats.
+
+Ignoring the group of unknown, we see that both suspects and victims are concentrated between 25-44 years old. Both suspects and victims gradually decrease as age decreases before 25 years old or increases after 44 years old.
+
+```{r}
+data1<-data[,c(24:26,33:35)]
+data1$SUSP_AGE_GROUP[data1$SUSP_AGE_GROUP==""]<- NA
+data1$SUSP_RACE[data1$SUSP_RACE==""]<- NA
+data1$SUSP_SEX[data1$SUSP_SEX==""]<- NA
+
+data1$VIC_AGE_GROUP[data1$VIC_AGE_GROUP==""]<- NA
+data1$VIC_RACE[data1$VIC_RACE==""]<- NA
+data1$VIC_SEX[data1$VIC_SEX==""]<- NA
+
+data1$SUSP_AGE_GROUP<-ifelse(data1$SUSP_AGE_GROUP=="<18","<18",
+                             ifelse(data1$SUSP_AGE_GROUP=="18-24","18-24",
+                                    ifelse(data1$SUSP_AGE_GROUP=="25-44","25-44",
+                                           ifelse(data1$SUSP_AGE_GROUP=="45-64","45-64",
+                                                  ifelse(data1$SUSP_AGE_GROUP=="65+","65+","Unknown")))
+))
+
+data1$VIC_AGE_GROUP<-ifelse(data1$VIC_AGE_GROUP=="<18","<18",
+                             ifelse(data1$VIC_AGE_GROUP=="18-24","18-24",
+                                    ifelse(data1$VIC_AGE_GROUP=="25-44","25-44",
+                                           ifelse(data1$VIC_AGE_GROUP=="45-64","45-64",
+                                                  ifelse(data1$VIC_AGE_GROUP=="65+","65+","Unknown")))
+                             ))
+```
+```{r}
+t2<-as.data.frame(table(data1$SUSP_AGE_GROUP))
+t3<-as.data.frame(table(data1$VIC_AGE_GROUP))
+t2_t3<-merge(t2,t3,by="Var1")
+colnames(t2_t3)<-c("age","susp",'vic')
+tidyt<-t2_t3%>%pivot_longer(cols=!age,names_to = "type",values_to = "count")
+ggplot(tidyt, aes(x = age, y = count)) +
+  geom_bar(
+    aes(color = type, fill = type),
+    stat = "identity", position = position_dodge(0.8),
+    width = 0.7
+  ) 
+
+```
+
+### Race
+
+This part also contains two variables "SUSP_RACE" and "VIC_RACE". These records the race of suspects and victims of offense.
+
+Sorted by suspect's race, ignoring UNKNOWN group, We found that the race with the more suspects, the more victims. Blacks have the most suspects and victims, which reminds us that the living environment of blacks in New York may be worse than other races.
+
+
+```{r}
+t4<-as.data.frame(table(data1$SUSP_RACE))
+t5<-as.data.frame(table(data1$VIC_RACE))
+t4_t5<-merge(t4,t5,by="Var1")
+colnames(t4_t5)<-c("race","susp",'vic')
+tidyt<-t4_t5%>%pivot_longer(cols=!race,names_to = "type",values_to = "count")
+
+library(forcats)
+ggplot(tidyt,aes(x=count,y=fct_reorder2(race,type=="susp",count,.desc=FALSE)))+
+  geom_point(aes(color=type),size=3)
+```
+
+
+## Relationships
+
+### SUSP_SEX & law_cat_cd
+
+This mosaic plot showed us the relationship between suspect's sex and the level of offenses. Among all crimes, male suspects accounted for the highest proportion. Female suspects take a relatively large proportion of the level of violation, and the proportion of female suspects gradually decreasing as the severity of the offenses increases.
+
+```{r}
+data1$law_cat_cd=data$LAW_CAT_CD
+mosaic(SUSP_SEX~law_cat_cd,data1,direction = c("v", "h"))
+```
+
+
+
+
