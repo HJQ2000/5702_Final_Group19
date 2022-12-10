@@ -6,7 +6,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge" />
   <title>Chapter 4 Results | 5702 Final Project Group 19</title>
   <meta name="description" content="Chapter 4 Results | 5702 Final Project Group 19" />
-  <meta name="generator" content="bookdown 0.29 and GitBook 2.6.7" />
+  <meta name="generator" content="bookdown 0.30 and GitBook 2.6.7" />
 
   <meta property="og:title" content="Chapter 4 Results | 5702 Final Project Group 19" />
   <meta property="og:type" content="book" />
@@ -23,7 +23,7 @@
 <meta name="author" content="Jingqi Huang, Shaonan Wang, Baochan Jiang" />
 
 
-<meta name="date" content="2022-11-01" />
+<meta name="date" content="2022-12-09" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -84,7 +84,22 @@
 <li class="chapter" data-level="3.2" data-path="data.html"><a href="data.html#cleaning-transformation"><i class="fa fa-check"></i><b>3.2</b> Cleaning / transformation</a></li>
 <li class="chapter" data-level="3.3" data-path="data.html"><a href="data.html#missing-value-analysis"><i class="fa fa-check"></i><b>3.3</b> Missing value analysis</a></li>
 </ul></li>
-<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a></li>
+<li class="chapter" data-level="4" data-path="results.html"><a href="results.html"><i class="fa fa-check"></i><b>4</b> Results</a>
+<ul>
+<li class="chapter" data-level="4.1" data-path="results.html"><a href="results.html#variables"><i class="fa fa-check"></i><b>4.1</b> Variables</a>
+<ul>
+<li class="chapter" data-level="4.1.1" data-path="results.html"><a href="results.html#rpt_dt"><i class="fa fa-check"></i><b>4.1.1</b> RPT_DT</a></li>
+<li class="chapter" data-level="4.1.2" data-path="results.html"><a href="results.html#ofns_desc"><i class="fa fa-check"></i><b>4.1.2</b> OFNS_DESC</a></li>
+<li class="chapter" data-level="4.1.3" data-path="results.html"><a href="results.html#law_cat_cd-boro_nm"><i class="fa fa-check"></i><b>4.1.3</b> LAW_CAT_CD, BORO_NM</a></li>
+<li class="chapter" data-level="4.1.4" data-path="results.html"><a href="results.html#prem_typ_desc"><i class="fa fa-check"></i><b>4.1.4</b> PREM_TYP_DESC</a></li>
+<li class="chapter" data-level="4.1.5" data-path="results.html"><a href="results.html#age_group"><i class="fa fa-check"></i><b>4.1.5</b> Age_group</a></li>
+<li class="chapter" data-level="4.1.6" data-path="results.html"><a href="results.html#race"><i class="fa fa-check"></i><b>4.1.6</b> Race</a></li>
+</ul></li>
+<li class="chapter" data-level="4.2" data-path="results.html"><a href="results.html#relationships"><i class="fa fa-check"></i><b>4.2</b> Relationships</a>
+<ul>
+<li class="chapter" data-level="4.2.1" data-path="results.html"><a href="results.html#susp_sex-law_cat_cd"><i class="fa fa-check"></i><b>4.2.1</b> SUSP_SEX &amp; law_cat_cd</a></li>
+</ul></li>
+</ul></li>
 <li class="chapter" data-level="5" data-path="interactive-component.html"><a href="interactive-component.html"><i class="fa fa-check"></i><b>5</b> Interactive component</a></li>
 <li class="chapter" data-level="6" data-path="conclusion.html"><a href="conclusion.html"><i class="fa fa-check"></i><b>6</b> Conclusion</a></li>
 <li class="divider"></li>
@@ -108,7 +123,57 @@
             <section class="normal" id="section-">
 <div id="results" class="section level1 hasAnchor" number="4">
 <h1><span class="header-section-number">Chapter 4</span> Results<a href="results.html#results" class="anchor-section" aria-label="Anchor link to header"></a></h1>
+<p>Here, we analyze each variable one by one to see how the crime rate changes under different categories.</p>
+<div id="variables" class="section level2 hasAnchor" number="4.1">
+<h2><span class="header-section-number">4.1</span> Variables<a href="results.html#variables" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="rpt_dt" class="section level3 hasAnchor" number="4.1.1">
+<h3><span class="header-section-number">4.1.1</span> RPT_DT<a href="results.html#rpt_dt" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Variable “RPT_DT” is the date that the event was reported to police.</p>
+<p>From the Time Series plot, we found that the year-to-year crime trends were similar, with lower numbers at the beginning and end of the year and higher numbers in the middle of the year.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p>Therefore, we break down the number of crimes by month. Crimes are higher from May to October and highest in July, lowest in February.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
+</div>
+<div id="ofns_desc" class="section level3 hasAnchor" number="4.1.2">
+<h3><span class="header-section-number">4.1.2</span> OFNS_DESC<a href="results.html#ofns_desc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Variable “OFNS_DESC” is the crime description of corresponding to the offense event.</p>
+<p>As we can see from the Cleveland dot plot below, in the New York area, the most committed crime was “Petit Larceny”. Appeared more than 200,000 times from 2017 to 2019. Besides, the crimes of harrassment also exceed 200,000 times and crimes of assault &amp; related offenses, criminal mischief, grand larceny exceed 100,000 times. These were the types of crimes that occurred the most during the three-year period. They are sudden crimes and mainly threaten personal financial security.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+<div id="law_cat_cd-boro_nm" class="section level3 hasAnchor" number="4.1.3">
+<h3><span class="header-section-number">4.1.3</span> LAW_CAT_CD, BORO_NM<a href="results.html#law_cat_cd-boro_nm" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Variable “LAW_CAT_CD” is the level of offense, it contains felony, misdemeanor and violation. Variable “BORO_NM” is the name of the borough in which the incident occurred.</p>
+<p>As we can see from the Horizontal Stacked Bar chart, Brooklyn has the most crimes and Staten Island has the least. This may be caused by the population gap, but still reminds us of the security situation in different regions. At the same time, from the perspective of crime level, most crimes are misdemeanors, and the number of serious crimes is second. But in terms of seriousness, felony causes greater personal harm and social impact, so we need to pay more attention to its data. In terms of numbers, the Brooklyn area had the highest number of felony crimes. But in terms of proportion, the proportion of felony crimes in each region is near 20%.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
+</div>
+<div id="prem_typ_desc" class="section level3 hasAnchor" number="4.1.4">
+<h3><span class="header-section-number">4.1.4</span> PREM_TYP_DESC<a href="results.html#prem_typ_desc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>Variable “PREM_TYP_DESC” is specific description of where the crime occurred, e.g. grocery store, home, street, etc.</p>
+<p>The most crimes occurred on the street, followed by residential apartment house, with more than 300,000 crimes during three years.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+</div>
+<div id="age_group" class="section level3 hasAnchor" number="4.1.5">
+<h3><span class="header-section-number">4.1.5</span> Age_group<a href="results.html#age_group" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This part contains two variables “SUSP_AGE_GROUP” and “VIC_AGE_GROUP”. These records the ages of suspects and victims of offense, helping us better understand the characteristics of suspects and helping us identify potential threats.</p>
+<p>Ignoring the group of unknown, we see that both suspects and victims are concentrated between 25-44 years old. Both suspects and victims gradually decrease as age decreases before 25 years old or increases after 44 years old.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-13-1.png" width="672" /></p>
+</div>
+<div id="race" class="section level3 hasAnchor" number="4.1.6">
+<h3><span class="header-section-number">4.1.6</span> Race<a href="results.html#race" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This part also contains two variables “SUSP_RACE” and “VIC_RACE”. These records the race of suspects and victims of offense.</p>
+<p>Sorted by suspect’s race, ignoring UNKNOWN group, We found that the race with the more suspects, the more victims. Blacks have the most suspects and victims, which reminds us that the living environment of blacks in New York may be worse than other races.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-14-1.png" width="672" /></p>
+</div>
+</div>
+<div id="relationships" class="section level2 hasAnchor" number="4.2">
+<h2><span class="header-section-number">4.2</span> Relationships<a href="results.html#relationships" class="anchor-section" aria-label="Anchor link to header"></a></h2>
+<div id="susp_sex-law_cat_cd" class="section level3 hasAnchor" number="4.2.1">
+<h3><span class="header-section-number">4.2.1</span> SUSP_SEX &amp; law_cat_cd<a href="results.html#susp_sex-law_cat_cd" class="anchor-section" aria-label="Anchor link to header"></a></h3>
+<p>This mosaic plot showed us the relationship between suspect’s sex and the level of offenses. Among all crimes, male suspects accounted for the highest proportion. Female suspects take a relatively large proportion of the level of violation, and the proportion of female suspects gradually decreasing as the severity of the offenses increases.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-15-1.png" width="672" /></p>
 
+</div>
+</div>
 </div>
             </section>
 
