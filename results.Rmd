@@ -127,8 +127,8 @@ ggplot(tidyt, aes(x = age, y = count)) +
     aes(color = type, fill = type),
     stat = "identity", position = position_dodge(0.8),
     width = 0.7
-  ) 
-
+  )+
+  facet_wrap(~type)
 ```
 
 ### Race
