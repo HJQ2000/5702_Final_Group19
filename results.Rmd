@@ -14,6 +14,7 @@ library(tidyverse)
 library(gridExtra)
 library(vcd)
 library(grid)
+library(parcoords)
 ```
 
 
@@ -46,12 +47,16 @@ Variable "OFNS_DESC" is the crime description of corresponding to the offense ev
 As we can see from the Cleveland dot plot below, in the New York area, the most committed crime was "Petit Larceny". Appeared more than 200,000 times from 2017 to 2019. Besides, the crimes of harrassment also exceed 200,000 times and crimes of assault & related offenses, criminal mischief, grand larceny exceed 100,000 times. These were the types of crimes that occurred the most during the three-year period. They are sudden crimes and mainly threaten personal financial security.
 
 ```{r}
-a<-as.data.frame(table(data$OFNS_DESC)) # Count the number of crimes under the crime category
-colnames(a)<-c("offense","Freq")
-ggplot(a,aes(x=Freq,y=reorder(offense,Freq)))+
-  geom_point()+
-  xlab("crime counts")+
-  ylab("offense type")
+data$year<-str_sub(data$RPT_DT,7,10)
+a<-as.data.frame(table(data$OFNS_DESC,data$year))
+colnames(a)<-c("offense","year","Freq")
+temp<-subset(a,a$Freq>100)
+
+ggplot(temp,aes(x=Freq,y=fct_reorder2(offense,year=="2019",Freq,.desc=FALSE)))+
+  geom_point(aes(color=year))+
+  ggtitle("crimes in offense category") +
+  xlab("counts") +
+  ylab("")
 ```
 
 ### LAW_CAT_CD, BORO_NM
@@ -74,16 +79,32 @@ ggplot(t1, aes(x = Freq ,y=reorder(Var1,Freq),fill=Var2)) +
 
 Variable "PREM_TYP_DESC" is specific description of where the crime occurred, e.g. grocery store, home, street, etc.
 
-The most crimes occurred on the street, followed by residential apartment house, with more than 300,000 crimes during three years. 
+The most crimes occurred on the street, followed by residential apartment house, with more than 100,000 crimes during three years. Crimes occurred in each year is similar, there is no sudden decrease or sudden increase.
 
 
 ```{r}
-b<-as.data.frame(table(data$PREM_TYP_DESC))
-colnames(b)<-c("premise","Freq")
-ggplot(b,aes(x=Freq,y=reorder(premise,Freq)))+
-  geom_point()+
-  ylab("crime counts")+
-  xlab("premise")
+data$year<-str_sub(data$RPT_DT,7,10)
+b<-table(data$PREM_TYP_DESC,data$year)
+c<-as.data.frame.array(b)
+c<-data.frame(premise=row.names(b),c)
+
+colnames(c)<-c("premise","2017","2018","2019")
+c$total<-c$`2017`+c$`2018`+c$`2019`
+
+d<-subset(c,c$total>5000)
+data.frame(d)  %>%
+  parcoords(  
+    rownames = F   
+    , brushMode = "1D-axes"  
+    , reorderable = T
+    , queue = T  
+    , color = list(  
+      colorBy = "premise"  
+      ,colorScale = "scaleOrdinal"  
+      ,colorScheme = "schemeCategory10"  
+    )  
+    , withD3 = TRUE  
+  )
 ```
 
 ### Age_group

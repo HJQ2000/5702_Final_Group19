@@ -23,7 +23,7 @@
 <meta name="author" content="Jingqi Huang, Shaonan Wang, Baochan Jiang" />
 
 
-<meta name="date" content="2022-12-10" />
+<meta name="date" content="2022-12-11" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -52,6 +52,10 @@
 <link href="libs/anchor-sections-1.1.0/anchor-sections.css" rel="stylesheet" />
 <link href="libs/anchor-sections-1.1.0/anchor-sections-hash.css" rel="stylesheet" />
 <script src="libs/anchor-sections-1.1.0/anchor-sections.js"></script>
+<script src="libs/htmlwidgets-1.5.4/htmlwidgets.js"></script>
+<link href="libs/parallel-coordinates-2.1.8/parcoords.css" rel="stylesheet" />
+<script src="libs/parcoords-binding-1.0.0/parcoords.js"></script>
+<script src="libs/d3-5.16.0/d3.min.js"></script>
 
 
 
@@ -149,8 +153,9 @@
 <div id="prem_typ_desc" class="section level3 hasAnchor" number="4.1.4">
 <h3><span class="header-section-number">4.1.4</span> PREM_TYP_DESC<a href="results.html#prem_typ_desc" class="anchor-section" aria-label="Anchor link to header"></a></h3>
 <p>Variable “PREM_TYP_DESC” is specific description of where the crime occurred, e.g. grocery store, home, street, etc.</p>
-<p>The most crimes occurred on the street, followed by residential apartment house, with more than 300,000 crimes during three years.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-11-1.png" width="672" /></p>
+<p>The most crimes occurred on the street, followed by residential apartment house, with more than 100,000 crimes during three years. Crimes occurred in each year is similar, there is no sudden decrease or sudden increase.</p>
+<div class="parcoords html-widget" height="480" id="htmlwidget-ed48463335999c20a8c3" style="width:672px;height:480px; position:relative; overflow-x:auto; overflow-y:hidden; max-width:100%;" width="672"></div>
+<script type="application/json" data-for="htmlwidget-ed48463335999c20a8c3">{"x":{"data":{"names":["","BANK","BAR/NIGHT CLUB","CHAIN STORE","CLOTHING/BOUTIQUE","COMMERCIAL BUILDING","DEPARTMENT STORE","DRUG STORE","FAST FOOD","FOOD SUPERMARKET","GROCERY/BODEGA","HOSPITAL","HOTEL/MOTEL","MAILBOX OUTSIDE","OTHER","PARK/PLAYGROUND","PARKING LOT/GARAGE (PRIVATE)","PARKING LOT/GARAGE (PUBLIC)","PUBLIC BUILDING","PUBLIC SCHOOL","RESIDENCE-HOUSE","RESIDENCE - APT. HOUSE","RESIDENCE - PUBLIC HOUSING","RESTAURANT/DINER","STREET","TRANSIT - NYC SUBWAY"],"premise":["","BANK","BAR/NIGHT CLUB","CHAIN STORE","CLOTHING/BOUTIQUE","COMMERCIAL BUILDING","DEPARTMENT STORE","DRUG STORE","FAST FOOD","FOOD SUPERMARKET","GROCERY/BODEGA","HOSPITAL","HOTEL/MOTEL","MAILBOX OUTSIDE","OTHER","PARK/PLAYGROUND","PARKING LOT/GARAGE (PRIVATE)","PARKING LOT/GARAGE (PUBLIC)","PUBLIC BUILDING","PUBLIC SCHOOL","RESIDENCE-HOUSE","RESIDENCE - APT. HOUSE","RESIDENCE - PUBLIC HOUSING","RESTAURANT/DINER","STREET","TRANSIT - NYC SUBWAY"],"X2017":[1821,2187,4918,13864,4061,12890,9695,5684,2683,2665,7734,2449,2712,9,13734,5366,2065,2192,2604,4742,43175,102187,37059,5963,136608,11961],"X2018":[1963,2143,5107,15073,4383,12957,10703,6387,2916,2856,8063,2491,2842,3152,14800,4584,1863,2050,2509,4259,43650,104357,33444,6284,127655,11855],"X2019":[1870,1762,4565,16431,4484,12379,10495,7339,3028,2661,7910,2427,2760,2079,13753,4594,1844,2040,2184,3745,45674,102262,32858,5917,128316,12001],"total":[5654,6092,14590,45368,12928,38226,30893,19410,8627,8182,23707,7367,8314,5240,42287,14544,5772,6282,7297,12746,132499,308806,103361,18164,392579,35817]},"options":{"rownames":false,"color":{"colorBy":"premise","colorScale":"scaleOrdinal","colorScheme":"schemeCategory10"},"brushMode":"1D-axes","brushPredicate":"AND","reorderable":true,"margin":{"top":50,"bottom":50,"left":100,"right":50},"mode":"queue","bundlingStrength":0.5,"smoothness":0},"autoresize":false,"tasks":null},"evals":[],"jsHooks":[]}</script>
 </div>
 <div id="age_group" class="section level3 hasAnchor" number="4.1.5">
 <h3><span class="header-section-number">4.1.5</span> Age_group<a href="results.html#age_group" class="anchor-section" aria-label="Anchor link to header"></a></h3>
