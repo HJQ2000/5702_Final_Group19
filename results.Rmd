@@ -4,11 +4,13 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 
 
 ```{r}
-data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
+#data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
+data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
 # package
+library(ggalluvial)
 library(ggplot2)
 library(tidyverse)
 library(gridExtra)
@@ -16,7 +18,6 @@ library(vcd)
 library(grid)
 library(parcoords)
 ```
-
 
 ## Variables
 
@@ -115,7 +116,7 @@ Ignoring the group of unknown, we see that both suspects and victims are concent
 
 ```{r}
 data1<-data[,c(24:26,33:35)]
-data1$SUSP_AGE_GROUP[data1$SUSP_AGE_GROUP==""]<- NA
+data1$SUSP_AGE_GROUP[data1$SUSP_AGE_GROUP==""]<- NA #why set empty to NA. Is there differen between "" and unknown?
 data1$SUSP_RACE[data1$SUSP_RACE==""]<- NA
 data1$SUSP_SEX[data1$SUSP_SEX==""]<- NA
 
@@ -130,6 +131,7 @@ data1$SUSP_AGE_GROUP<-ifelse(data1$SUSP_AGE_GROUP=="<18","<18",
                                                   ifelse(data1$SUSP_AGE_GROUP=="65+","65+","Unknown")))
 ))
 
+
 data1$VIC_AGE_GROUP<-ifelse(data1$VIC_AGE_GROUP=="<18","<18",
                              ifelse(data1$VIC_AGE_GROUP=="18-24","18-24",
                                     ifelse(data1$VIC_AGE_GROUP=="25-44","25-44",
@@ -137,6 +139,7 @@ data1$VIC_AGE_GROUP<-ifelse(data1$VIC_AGE_GROUP=="<18","<18",
                                                   ifelse(data1$VIC_AGE_GROUP=="65+","65+","Unknown")))
                              ))
 ```
+
 ```{r}
 t2<-as.data.frame(table(data1$SUSP_AGE_GROUP))
 t3<-as.data.frame(table(data1$VIC_AGE_GROUP))
@@ -150,6 +153,20 @@ ggplot(tidyt, aes(x = age, y = count)) +
     width = 0.7
   )+
   facet_wrap(~type)
+```
+
+```{r}
+data1_age_freq <- data1 %>% group_by(SUSP_AGE_GROUP, VIC_AGE_GROUP) %>% summarize(Freq = n())%>% ungroup() %>% filter(!is.na(SUSP_AGE_GROUP) && !is.na(VIC_AGE_GROUP)) %>% filter(SUSP_AGE_GROUP!="Unknown") %>% filter(VIC_AGE_GROUP!="Unknown")
+```
+
+From the alluvial graph, we see that crimes more likely to happen between peers from same age group. The percentage of crime decreases as age difference enlarges. One thing we notice is that for suspects aging below 18, the percentage of victim aging between 18 and 24 is less than 25-44 age range and even less than 35-64 age range.
+
+```{r}
+ggplot(data1_age_freq, aes(axis1=SUSP_AGE_GROUP, axis2=VIC_AGE_GROUP, y=Freq))+
+  geom_flow(aes(fill=SUSP_AGE_GROUP))+
+  geom_stratum()+
+  geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
+  scale_x_discrete(limits=c("susp_age_group", "vic_age_group"))
 ```
 
 ### Race
@@ -170,7 +187,17 @@ library(forcats)
 ggplot(tidyt,aes(x=count,y=fct_reorder2(race,type=="susp",count,.desc=FALSE)))+
   geom_point(aes(color=type),size=3)
 ```
-
+From the alluvial graph, we see that crimes more likely to happen between peers from same race. From both graphs, we see that blacks and black hispanic has more suspects than victims. For victims from almost all races, the largest proportion of corresponding suspect comes from same race, the second largest proportion of corresponding suspect comes from Blacks(except for AMERICAN INDIAN/ALASKAN NATIVE where the race of most suspect is Black and second largest is same, and Black where the second largest is White Hispanic). 
+```{r}
+data1_race_freq <- data1 %>% group_by(SUSP_RACE, VIC_RACE) %>% summarize(Freq = n())%>% ungroup()%>% filter(!is.na(SUSP_RACE) && !is.na(VIC_RACE)) %>% filter(SUSP_RACE!="UNKNOWN") %>% filter(VIC_RACE!="UNKNOWN")
+```
+```{r}
+ggplot(data1_race_freq, aes(axis1=SUSP_RACE, axis2=VIC_RACE, y=Freq))+
+  geom_flow(aes(fill=VIC_RACE))+
+  geom_stratum()+
+  geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
+  scale_x_discrete(limits=c("susp_race", "vic_race"))
+```
 
 ## Relationships
 
@@ -181,8 +208,18 @@ This mosaic plot showed us the relationship between suspect's sex and the level 
 ```{r}
 data1$law_cat_cd=data$LAW_CAT_CD
 mosaic(SUSP_SEX~law_cat_cd,data1,direction = c("v", "h"))
+
+data1$law_cat_cd=data$LAW_CAT_CD
+mosaic(VIC_SEX~law_cat_cd,data1,direction = c("v", "h"))
 ```
 
+```{r}
+data1_sex_freq <- data1 %>% group_by(SUSP_SEX, VIC_SEX) %>% summarize(Freq = n())%>% ungroup()%>% filter(!is.na(SUSP_SEX) && !is.na(VIC_SEX)) %>% filter(SUSP_SEX!="UNKNOWN") %>% filter(VIC_SEX!="UNKNOWN")
+ggplot(data1_sex_freq, aes(axis1=SUSP_SEX, axis2=VIC_SEX, y=Freq))+
+  geom_flow(aes(fill=VIC_SEX))+
+  geom_stratum()+
+  geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
+  scale_x_discrete(limits=c("susp_sex", "vic_sex"))
+```
 
-
-
+From the mosaic plot and alluvial plot, we can see that female victims involve in a crime having a male suspect, and male suspect choose female victim as top target.
