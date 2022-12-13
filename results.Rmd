@@ -17,6 +17,8 @@ library(gridExtra)
 library(vcd)
 library(grid)
 library(parcoords)
+library(plotly)
+library(dplyr)
 ```
 
 ## Variables
@@ -108,6 +110,31 @@ data.frame(d)  %>%
   )
 ```
 
+### Latitude and Longitude
+This part contains two variables "Latitude" and "Longitude".
+
+As we can see from the histogram of crime frequency count corresponding to latitude and longitude, there are multi peaks in both graphs. This might indicate that there are some regions with more crimes happened. For example, there is a peak around 40.755 on latitude and a peak around -73.99 on longitude. Locating (40.755, -73.99) is somewhere near time square. The data might suggest that there are more crime happend near around this region.
+```{r}
+p1 <- ggplot(data, aes(x=Latitude))+
+  geom_histogram(binwidth=0.005)
+p2 <- ggplot(data, aes(x=Longitude))+
+  geom_histogram(binwidth=0.005)
+ggplotly(p1)
+ggplotly(p2)
+```
+
+From the scatter plot and 2D histogram, we can see that Manhattan and Bronx has densest crime happened, then is Brooklyn, Queens, and  last Staten Island. The crimes happened in central park is rare according to both graphs, suggesting that it might be a safe place on Manhattan. The 2d histogram again confirm our previous guess that there are many crimes happened near time square. 
+
+```{r}
+ggplot(data, aes(x=Longitude, y=Latitude, color=BORO_NM))+
+  geom_point(size=0.005, alpha=0.0075)
+```
+
+```{r}
+ggplot(data, aes(x=Longitude, y=Latitude))+
+  geom_bin2d(binwidth=c(0.005, 0.005))+
+  scale_fill_distiller(palette="YlOrRd", direction=1)
+```
 ### Age_group
 
 This part contains two variables "SUSP_AGE_GROUP" and "VIC_AGE_GROUP". These records the ages of suspects and victims of offense, helping us better understand the characteristics of suspects and helping us identify potential threats.
@@ -223,3 +250,5 @@ ggplot(data1_sex_freq, aes(axis1=SUSP_SEX, axis2=VIC_SEX, y=Freq))+
 ```
 
 From the mosaic plot and alluvial plot, we can see that female victims involve in a crime having a male suspect, and male suspect choose female victim as top target.
+
+

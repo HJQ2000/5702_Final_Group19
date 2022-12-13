@@ -12,7 +12,7 @@ rpt_dt
 ofns_desc
 law_cat_cd-boro_nm
 prem_typ_desc
-age_group
+latitude-and-longitude
 race
 relationships
 susp_sex-law_cat_cd
