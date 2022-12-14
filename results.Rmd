@@ -6,7 +6,7 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 ```{r}
 #data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
 #data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
-#data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
+data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
