@@ -1,3 +1,149 @@
+--- 
+title: "5702 Final Project Group 19"
+author: "Jingqi Huang, Shaonan Wang, Baochan Jiang"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+---
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+
+# Introduction
+
+In this project, We want to study the safe issue in the New York City. It is always heard that New York City is dangerous for living with a high crime rate. As students new to the city, we want to find out if the rumor is true or not. We also would like to understand the detailed crime situations and distributions in the city, such as where would be the safest areas in NYC, when the crimes usually happen, and what kind of crimes happen more frequently. These information can help people newly coming to NYC to have a better sense of the city's safe status and choose safe areas to live and socialize in order to better protect themselves. For this purpose, we are going to use NYPD Complaint Data Historic in recent years for our analysis.
+
+<!--chapter:end:index.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Proposal
+
+## Research topic
+Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Is it safe to live in New York City? Where are the safest regions to live in terms of low violence?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we would care about. 
+
+## Data availability
+NYPD Complaint Data Historic data is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). and narrow down the date range to most  recent 3 years that the dataset includes (2017/01/01-2020/01/01).
+
+<!--chapter:end:proposal.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Data 
+
+## Sources
+https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+
+We’d like to find integrated data sets from the official website for research. Such data is more comprehensive and accurate, and it is also conducive to our data processing and analysis. Thus we choose NYC OpenData as our data sources. We tried to find data related to violence in New York City, so we decided to use complaint data of crime in NYC. The data is provided and maintained by the New York Police Department (NYPD), owned by NYC OpenData. This data is manually extracted every quarter and reviewed by the NYPD. Each record represents a criminal complaint in NYC and includes information about the type of crime, the location and time of enforcement. It can be directly downloaded from the NYC OpenData website in the CSV format, so we can simply import the CSV file. The dataset contains valid felony, misdemeanor, and violation crimes reported to the NYPD from 2006 to the end of 2019. If we have any questions about the data, we can send a note to NYC OpenData (NYC Open Data - Contact Us (https://opendata.cityofnewyork.us/engage/)). 
+
+Known issues relating to data quality:
+The dataset contains some null values, because the data was not collected or not available at the time of report. This may lead to bias in our study of the distribution of the data.
+The dataset is released based on the date the incident was reported, but some crimes may have occurred years before they were reported. 
+Some crimes that were not able to be geo-coded have been located as occurring at the police station house within the precinct of occurrence. This will cause a certain bias in the geographical analysis, but this bias can be avoided by appropriately expanding the geographical scope when grouping.
+
+## Cleaning / transformation
+
+We directly downloaded the data from the website and saved in a CSV file. When downloading, we filtered out the date range we are interested in - from 2017/01/01 to 2020/01/01. Most of the features in the dataset are in text format, and numeric values are in correct scales and format, so the data transformation is not necessary. There are several features where most of the information is not recorded, like name of NYC park, playground or greenspace of occurrence, name of NYCHA housing development of occurrence, and transit district in which the offense occurred, so we would not include them in our analysis. Also, there are pairs of features showing the same information, such as offense classification code & code description, internal offense class code & code description, jurisdiction code & code description. As the code itself would not tell much information about the features, we removed these codes and only kept the corresponding short description the code refers to.
+
+```{r}
+#package loading
+library(dplyr)
+library(tidyr)
+library(tidyverse)
+library(redav)
+```
+
+
+```{r}
+df_clean <- df %>% select(-c(JURIS_DESC, JURISDICTION_CODE, PARKS_NM, HADEVELOPT, HOUSING_PSA, TRANSIT_DISTRICT, STATION_NAME, ADDR_PCT_CD, KY_CD, PD_CD))
+#head(df,5)
+```
+
+
+
+## Missing value analysis
+
+We performed analysis on missing values to see if there are any patterns of the missing data. 
+
+We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of each feature, we can see that "TRANSIT_DISTRICT" (transit district in which the offense occurred) and "HOUSING_PSA" (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as "PD_CD" (internal classification code) and "JURISDICTION_CODE", but the percentages are below 1%, which are not explicitly displayed in the plot.
+
+```{r}
+data=read.csv("NYPD_Complaint_Data_Historic.csv")
+df<-as.data.frame(data)
+#df %>% summarise_all(funs(n_distinct(.)))
+col_missing <- colSums(is.na(df)) %>% sort(decreasing = TRUE)
+col_missing = (col_missing/nrow(df))*100
+```
+
+```{r}
+col_missing
+```
+
+
+```{r}
+tidy_missing = 
+    as.data.frame(col_missing) %>% 
+    rownames_to_column("id") %>% 
+    gather(key, value, -id) 
+tidy_missing$id <- as.factor(tidy_missing$id)
+
+ggplot(tidy_missing, aes(x=fct_rev(fct_reorder(id,value,.desc = FALSE)),y=value)) +
+geom_bar(stat='identity',fill = "cornflowerblue") +
+#scale_x_discrete(breaks = levels(tidy_missing$id)[c(T,T, rep(F, 33))]) +
+scale_x_discrete(guide = guide_axis(n.dodge=6))+
+xlab("") + 
+ylab("Percentage of Missing Rows")
+    
+```
+
+
+```{r}
+# tidydf <- df %>% 
+#     rownames_to_column("id") %>% 
+#     gather(key, value, -id) %>%
+#     mutate(missing = ifelse(is.na(value), "yes", "no"))
+# 
+# ggplot(tidydf, aes(x = key, y = fct_rev(id), fill = missing)) +
+#   geom_tile(color = "white") + 
+#   ggtitle("mtcars with NAs added") +
+#   ylab('') + 
+#   scale_fill_viridis_d() + # discrete scale
+#   theme_bw()
+```
+
+In addition to the percentage of missing values in each feature, we can also show the missing patterns. There are 8 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in our analysis.
+
+
+```{r}
+#colnames(df) <- seq(1,length(colnames(df)))
+#data_cleaned = as.list(df)
+plot_missing(df, percent = TRUE)
+```
+
+
+
+<!--chapter:end:data.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
 # Results
 
 Here, we analyze each variable one by one to see how the crime rate changes under different categories.
@@ -6,7 +152,7 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 ```{r}
 #data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
 #data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
-#data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
+data=read.csv("NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
@@ -254,4 +400,32 @@ ggplot(data1_sex_freq, aes(axis1=SUSP_SEX, axis2=VIC_SEX, y=Freq))+
 
 From the mosaic plot and alluvial plot, we can see that female victims involve in a crime having a male suspect, and male suspect choose female victim as top target.
 
+
+
+<!--chapter:end:results.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Interactive component
+
+
+
+<!--chapter:end:interactive.Rmd-->
+
+```{r include=FALSE, cache=FALSE}
+knitr::opts_chunk$set(
+  echo = FALSE,
+  message = FALSE,
+  warning = FALSE
+)
+```
+# Conclusion
+
+
+<!--chapter:end:conclusion.Rmd-->
 
