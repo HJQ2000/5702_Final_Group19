@@ -16,6 +16,8 @@ latitude-and-longitude
 age_group
 race
 relationships
-susp_sex-law_cat_cd
+sex-law_cat_cd
+suspect-victim
+whats-about-manhattan
 interactive-component
 conclusion

@@ -4,9 +4,9 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 
 
 ```{r}
-#data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
+data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
 #data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
-data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
+#data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
@@ -37,27 +37,39 @@ ggplot(t6, aes(x=Var1, y=Freq)) +
   geom_line()
 ```
 
-Therefore, we break down the number of crimes by month. Crimes are higher from May to October and highest in July, lowest in February.
+Therefore, we break down the number of crimes by month. And defined 8:00-20:00 is the time period for "day" and the rest as "night". 
+Within the barplot we found that twice as many crimes occur at day than during the night. Both day and night, crimes are higher between May to October and lowest in February. This may be because February is the month with the fewest days. The number of crimes at day is similar across the months, while during the night there is a distinct single peak in July. This may be due to the fact that from February to July the weather gets warmer and people become more active and social, and therefore more potential accidents. Temperatures drop between July and December, and the number of crimes drops slightly.
 
 ```{r}
 data$month<-str_sub(data$RPT_DT,1,2)
-barplot(table(data$month))
+data$t<-str_sub(data$CMPLNT_FR_TM,1,2)
+data$t<-as.numeric(data$t)
+data$day<-ifelse(data$t>=8 & data$t<=20,"day","night")
+t1<-as.data.frame(table(data$month,data$day))
+colnames(t1)<-c("month","time","Freq")
+
+ggplot(t1, aes(x = month , y = Freq)) +
+  geom_bar(
+    aes(color = time, fill = time),
+    stat = "identity", position = position_dodge(0.8),
+    width = 0.7
+  ) +
+  facet_wrap(~time,nrow=2)
 ```
 
 ### OFNS_DESC
 
 Variable "OFNS_DESC" is the crime description of corresponding to the offense event. 
 
-As we can see from the Cleveland dot plot below, in the New York area, the most committed crime was "Petit Larceny". Appeared more than 200,000 times from 2017 to 2019. Besides, the crimes of harrassment also exceed 200,000 times and crimes of assault & related offenses, criminal mischief, grand larceny exceed 100,000 times. These were the types of crimes that occurred the most during the three-year period. They are sudden crimes and mainly threaten personal financial security.
+As we can see from the Cleveland dot plot below, in the New York area, the most committed crime was "Petit Larceny". Appeared more than 200,000 times from 2017 to 2019. Besides, the crimes of harrassment also exceed 200,000 times and crimes of assault & related offenses, criminal mischief, grand larceny exceed 100,000 times. These were the types of crimes that occurred the most during the three-year period. They are sudden crimes and mainly threaten personal financial security.It can be found that most of the crimes that occur more frequently are misdemeanors, and felonies are mainly grand larceny, which poses less threat to life safety.
 
 ```{r}
 data$year<-str_sub(data$RPT_DT,7,10)
-a<-as.data.frame(table(data$OFNS_DESC,data$year))
-colnames(a)<-c("offense","year","Freq")
-temp<-subset(a,a$Freq>100)
-
-ggplot(temp,aes(x=Freq,y=fct_reorder2(offense,year=="2019",Freq,.desc=FALSE)))+
-  geom_point(aes(color=year))+
+t2<-as.data.frame(table(data$OFNS_DESC,data$LAW_CAT_CD))
+colnames(t2)<-c("crimes","level","Freq")
+x<-subset(t2,t2$Freq>500)
+ggplot(x,aes(x=Freq,y=reorder(crimes,Freq),fill=level))+
+  geom_point(aes(color=level))+
   ggtitle("crimes in offense category") +
   xlab("counts") +
   ylab("")
@@ -115,6 +127,7 @@ data.frame(d)  %>%
 This part contains two variables "Latitude" and "Longitude".
 
 As we can see from the histogram of crime frequency count corresponding to latitude and longitude, there are multi peaks in both graphs. This might indicate that there are some regions with more crimes happened. For example, there is a peak around 40.755 on latitude and a peak around -73.99 on longitude. Locating (40.755, -73.99) is somewhere near time square. The data might suggest that there are more crime happend near around this region.
+
 ```{r}
 p1 <- ggplot(data, aes(x=Latitude))+
   geom_histogram(binwidth=0.005)
@@ -128,7 +141,7 @@ From the scatter plot and 2D histogram, we can see that Manhattan and Bronx has 
 
 ```{r}
 ggplot(data, aes(x=Longitude, y=Latitude, color=BORO_NM))+
-  geom_point(size=0.005, alpha=0.0075)
+  geom_point(size=0.005, alpha=0.0075,show.legend =FALSE)
 ```
 
 ```{r}
@@ -136,6 +149,7 @@ ggplot(data, aes(x=Longitude, y=Latitude))+
   geom_bin2d(binwidth=c(0.005, 0.005))+
   scale_fill_distiller(palette="YlOrRd", direction=1)
 ```
+
 
 ### Age_group
 
@@ -184,19 +198,7 @@ ggplot(tidyt, aes(x = age, y = count)) +
   facet_wrap(~type)
 ```
 
-```{r}
-data1_age_freq <- data1 %>% group_by(SUSP_AGE_GROUP, VIC_AGE_GROUP) %>% summarize(Freq = n())%>% ungroup() %>% filter(!is.na(SUSP_AGE_GROUP) && !is.na(VIC_AGE_GROUP)) %>% filter(SUSP_AGE_GROUP!="Unknown") %>% filter(VIC_AGE_GROUP!="Unknown")
-```
 
-From the alluvial graph, we see that crimes more likely to happen between peers from same age group. The percentage of crime decreases as age difference enlarges. One thing we notice is that for suspects aging below 18, the percentage of victim aging between 18 and 24 is less than 25-44 age range and even less than 45-64 age range.
-
-```{r}
-ggplot(data1_age_freq, aes(axis1=SUSP_AGE_GROUP, axis2=VIC_AGE_GROUP, y=Freq))+
-  geom_flow(aes(fill=SUSP_AGE_GROUP))+
-  geom_stratum()+
-  geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
-  scale_x_discrete(limits=c("susp_age_group", "vic_age_group"))
-```
 
 ### Race
 
@@ -217,7 +219,37 @@ ggplot(tidyt,aes(x=count,y=fct_reorder2(race,type=="susp",count,.desc=FALSE)))+
   geom_point(aes(color=type),size=3)
 ```
 
-From the alluvial graph, we see that crimes more likely to happen between peers from same race. From both graphs, we see that blacks and black hispanic has more suspects than victims. For victims from almost all races, the largest proportion of corresponding suspect comes from same race, the second largest proportion of corresponding suspect comes from Blacks(except for AMERICAN INDIAN/ALASKAN NATIVE where the race of most suspect is Black and second largest is same, and Black where the second largest is White Hispanic). 
+
+
+## Relationships
+
+### SEX & law_cat_cd
+
+This mosaic plot showed us the relationship between suspect's and victim's sex and the level of offenses. Among all crimes, male suspects accounted for the highest proportion. Female suspects take a relatively large proportion of the level of violation, and the proportion of female suspects gradually decreasing as the severity of the offenses increases.
+
+```{r}
+data1$law_cat_cd=data$LAW_CAT_CD
+mosaic(SUSP_SEX~law_cat_cd,data1,direction = c("v", "h"))
+
+data1$law_cat_cd=data$LAW_CAT_CD
+mosaic(VIC_SEX~law_cat_cd,data1,direction = c("v", "h"))
+```
+
+### Suspect & Victim
+
+From the alluvial plot, compared the suspect and victims' sex, we can see that female victims involve in a crime having a male suspect, and male suspect choose female victim as top target.
+
+```{r}
+data1_sex_freq <- data1 %>% group_by(SUSP_SEX, VIC_SEX) %>% summarize(Freq = n())%>% ungroup()%>% filter(!is.na(SUSP_SEX) && !is.na(VIC_SEX)) %>% filter(SUSP_SEX!="UNKNOWN") %>% filter(VIC_SEX!="UNKNOWN")
+ggplot(data1_sex_freq, aes(axis1=SUSP_SEX, axis2=VIC_SEX, y=Freq))+
+  geom_flow(aes(fill=VIC_SEX))+
+  geom_stratum()+
+  geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
+  scale_x_discrete(limits=c("susp_sex", "vic_sex"))
+```
+
+From the perspective of race, we see that crimes more likely to happen between peers from same race. From both graphs, we see that blacks and black hispanic has more suspects than victims. For victims from almost all races, the largest proportion of corresponding suspect comes from same race, the second largest proportion of corresponding suspect comes from Blacks(except for AMERICAN INDIAN/ALASKAN NATIVE where the race of most suspect is Black and second largest is same, and Black where the second largest is White Hispanic). 
+
 ```{r}
 data1_race_freq <- data1 %>% group_by(SUSP_RACE, VIC_RACE) %>% summarize(Freq = n())%>% ungroup()%>% filter(!is.na(SUSP_RACE) && !is.na(VIC_RACE)) %>% filter(SUSP_RACE!="UNKNOWN") %>% filter(VIC_RACE!="UNKNOWN")
 ```
@@ -229,29 +261,42 @@ ggplot(data1_race_freq, aes(axis1=SUSP_RACE, axis2=VIC_RACE, y=Freq))+
   scale_x_discrete(limits=c("susp_race", "vic_race"))
 ```
 
-## Relationships
-
-### SUSP_SEX & law_cat_cd
-
-This mosaic plot showed us the relationship between suspect's sex and the level of offenses. Among all crimes, male suspects accounted for the highest proportion. Female suspects take a relatively large proportion of the level of violation, and the proportion of female suspects gradually decreasing as the severity of the offenses increases.
-
 ```{r}
-data1$law_cat_cd=data$LAW_CAT_CD
-mosaic(SUSP_SEX~law_cat_cd,data1,direction = c("v", "h"))
-
-data1$law_cat_cd=data$LAW_CAT_CD
-mosaic(VIC_SEX~law_cat_cd,data1,direction = c("v", "h"))
+data1_age_freq <- data1 %>% group_by(SUSP_AGE_GROUP, VIC_AGE_GROUP) %>% summarize(Freq = n())%>% ungroup() %>% filter(!is.na(SUSP_AGE_GROUP) && !is.na(VIC_AGE_GROUP)) %>% filter(SUSP_AGE_GROUP!="Unknown") %>% filter(VIC_AGE_GROUP!="Unknown")
 ```
 
+From the perspective of age group, we see that crimes more likely to happen between peers from same age group. The percentage of crime decreases as age difference enlarges. One thing we notice is that for suspects aging below 18, the percentage of victim aging between 18 and 24 is less than 25-44 age range and even less than 45-64 age range.
+
 ```{r}
-data1_sex_freq <- data1 %>% group_by(SUSP_SEX, VIC_SEX) %>% summarize(Freq = n())%>% ungroup()%>% filter(!is.na(SUSP_SEX) && !is.na(VIC_SEX)) %>% filter(SUSP_SEX!="UNKNOWN") %>% filter(VIC_SEX!="UNKNOWN")
-ggplot(data1_sex_freq, aes(axis1=SUSP_SEX, axis2=VIC_SEX, y=Freq))+
-  geom_flow(aes(fill=VIC_SEX))+
+ggplot(data1_age_freq, aes(axis1=SUSP_AGE_GROUP, axis2=VIC_AGE_GROUP, y=Freq))+
+  geom_flow(aes(fill=SUSP_AGE_GROUP))+
   geom_stratum()+
   geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
-  scale_x_discrete(limits=c("susp_sex", "vic_sex"))
+  scale_x_discrete(limits=c("susp_age_group", "vic_age_group"))
 ```
 
-From the mosaic plot and alluvial plot, we can see that female victims involve in a crime having a male suspect, and male suspect choose female victim as top target.
+## WHAT'S ABOUT MANHATTAN
 
+Columbia University is located in the uptown area of Manhattan, where most of the students live. Besides, compared with misdemeanors, felonies are more harmful to human safety, so we further study the felony situation in Manhattan.
+
+```{r}
+temp<-data[data$BORO_NM=="MANHATTAN",]
+temp2<-temp[temp$LAW_CAT_CD=="FELONY",]
+```
+```{r}
+heatmap(table(temp2$PREM_TYP_DESC,temp2$OFNS_DESC),cexCol = 0.5 )
+```
+
+From the heatmap, we can see that Grand Larceny has occurred in various places and the number of occurrences is the highest. Most crimes are distributed in a wide range, and there is no specific premise for occurrence.
+
+Based on this, we further check the distribution of "Grand Larceny" which had the highest number of felony crimes in Manhattan.
+
+```{r}
+temp3<-temp2[temp2$OFNS_DESC=="GRAND LARCENY",]
+ggplot(temp3,aes(x=Longitude, y=Latitude,fill=day))+
+  geom_point(aes(color=day), size=0.05)+
+  facet_wrap(~day)
+```
+
+From the picture, we can found that the number and density of grand larceny on the left side of Central Park are lower than those on the right side. There is one crime-intensive area in upper Manhattan and lower Manhattan, students may pay more attention to their property and safety when visit these two areas. The crimes areas are similar during the day and night, but there are more crimes during the day.
 
