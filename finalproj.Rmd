@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 
 # Introduction
 
-In this project, We want to study the safe issue in the New York City. It is always heard that New York City is dangerous for living with a high crime rate. As students new to the city, we want to find out if the rumor is true or not. We also would like to understand the detailed crime situations and distributions in the city, such as where would be the safest areas in NYC, when the crimes usually happen, and what kind of crimes happen more frequently. These information can help people newly coming to NYC to have a better sense of the city's safe status and choose safe areas to live and socialize in order to better protect themselves. For this purpose, we are going to use NYPD Complaint Data Historic in recent years for our analysis.
+In this project, We want to study the safe issue in the New York City. It is always heard that New York City is dangerous for living with a high crime rate. As students new to the city, we want to find out if the rumor is true or not. We also would like to understand the detailed crime situations and distributions in the city, such as where would be the safest areas in NYC, when the crimes usually happen, and what kind of crimes happen more frequently. These information can help people newly coming to NYC to have a better sense of the city's safe status and choose safe areas to live and socialize in order to better protect themselves. For this purpose, we are going to use NYPD Complaint Data Historic in recent years for the analysis.
 
 <!--chapter:end:index.Rmd-->
 
@@ -28,7 +28,7 @@ knitr::opts_chunk$set(
 # Proposal
 
 ## Research topic
-Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Is it safe to live in New York City? Where are the safest regions to live in terms of low violence?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we would care about. 
+Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Is it safe to live in New York City? Where are the safest regions to live in terms of low violence?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we care about. 
 
 ## Data availability
 NYPD Complaint Data Historic data is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). and narrow down the date range to most  recent 3 years that the dataset includes (2017/01/01-2020/01/01).
@@ -81,7 +81,7 @@ We performed analysis on missing values to see if there are any patterns of the 
 We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of each feature, we can see that "TRANSIT_DISTRICT" (transit district in which the offense occurred) and "HOUSING_PSA" (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as "PD_CD" (internal classification code) and "JURISDICTION_CODE", but the percentages are below 1%, which are not explicitly displayed in the plot.
 
 ```{r}
-data=read.csv("NYPD_Complaint_Data_Historic.csv")
+data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 df<-as.data.frame(data)
 #df %>% summarise_all(funs(n_distinct(.)))
 col_missing <- colSums(is.na(df)) %>% sort(decreasing = TRUE)
@@ -124,7 +124,7 @@ ylab("Percentage of Missing Rows")
 #   theme_bw()
 ```
 
-In addition to the percentage of missing values in each feature, we can also show the missing patterns. There are 8 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in our analysis.
+In addition to the percentage of missing values in each feature, we can also show the missing patterns. There are 8 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.
 
 
 ```{r}
@@ -152,7 +152,7 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 ```{r}
 #data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
 #data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
-data=read.csv("NYPD_Complaint_Data_Historic.csv")
+#data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
