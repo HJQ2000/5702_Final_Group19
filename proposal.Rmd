@@ -4,4 +4,4 @@
 Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Is it safe to live in New York City? Where are the safest regions to live in terms of low violence?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we care about. 
 
 ## Data availability
-NYPD Complaint Data Historic data is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). and narrow down the date range to most  recent 3 years that the dataset includes (2017/01/01-2020/01/01).
+NYPD Complaint Data Historic data is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). and narrow down the date range to most Srecent 3 years that the dataset includes (2017/01/01-2020/01/01).

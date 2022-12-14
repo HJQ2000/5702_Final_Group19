@@ -45,7 +45,7 @@ col_missing = (col_missing/nrow(df))*100
 ```
 
 ```{r}
-col_missing
+#col_missing
 ```
 
 
