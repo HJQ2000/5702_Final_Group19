@@ -34,7 +34,7 @@ library(redav)
 
 We performed analysis on missing values to see if there are any patterns of the missing data. 
 
-We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of each feature, we can see that "TRANSIT_DISTRICT" (transit district in which the offense occurred) and "HOUSING_PSA" (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as "PD_CD" (internal classification code) and "JURISDICTION_CODE", but the percentages are below 1%, which are not explicitly displayed in the plot.
+We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of features with missing values, we can see that "TRANSIT_DISTRICT" (transit district in which the offense occurred) and "HOUSING_PSA" (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as "PD_CD" (internal classification code) and "JURISDICTION_CODE", but the percentages are below 1%, which are not explicitly displayed in the plot.
 
 ```{r}
 data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
@@ -54,39 +54,27 @@ tidy_missing =
     as.data.frame(col_missing) %>% 
     rownames_to_column("id") %>% 
     gather(key, value, -id) 
-tidy_missing$id <- as.factor(tidy_missing$id)
+#tidy_missing$id <- as.factor(tidy_missing$id)
+```
 
-ggplot(tidy_missing, aes(x=fct_rev(fct_reorder(id,value,.desc = FALSE)),y=value)) +
+
+```{r}
+ggplot(tidy_missing[tidy_missing$value>0,], aes(x=fct_rev(fct_reorder(id,value,.desc = FALSE)),y=value)) +
 geom_bar(stat='identity',fill = "cornflowerblue") +
 #scale_x_discrete(breaks = levels(tidy_missing$id)[c(T,T, rep(F, 33))]) +
-scale_x_discrete(guide = guide_axis(n.dodge=6))+
+scale_x_discrete(guide = guide_axis(n.dodge=3))+
 xlab("") + 
 ylab("Percentage of Missing Rows")
     
 ```
 
 
-```{r}
-# tidydf <- df %>% 
-#     rownames_to_column("id") %>% 
-#     gather(key, value, -id) %>%
-#     mutate(missing = ifelse(is.na(value), "yes", "no"))
-# 
-# ggplot(tidydf, aes(x = key, y = fct_rev(id), fill = missing)) +
-#   geom_tile(color = "white") + 
-#   ggtitle("mtcars with NAs added") +
-#   ylab('') + 
-#   scale_fill_viridis_d() + # discrete scale
-#   theme_bw()
-```
-
-In addition to the percentage of missing values in each feature, we can also show the missing patterns. There are 8 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.
+In addition to the percentage of missing values in each feature, we can also show the missing patterns. By choosing four variables with largest number of missing values, there are 6 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.
 
 
 ```{r}
 #colnames(df) <- seq(1,length(colnames(df)))
-#data_cleaned = as.list(df)
-plot_missing(df, percent = TRUE)
+plot_missing(df[,c(tidy_missing[tidy_missing$value>0,]$id)][,1:4], percent = TRUE)
 ```
 
 

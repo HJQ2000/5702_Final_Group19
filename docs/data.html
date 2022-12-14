@@ -23,7 +23,7 @@
 <meta name="author" content="Jingqi Huang, Shaonan Wang, Baochan Jiang" />
 
 
-<meta name="date" content="2022-12-13" />
+<meta name="date" content="2022-12-14" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
@@ -150,9 +150,9 @@ Some crimes that were not able to be geo-coded have been located as occurring at
 <div id="missing-value-analysis" class="section level2 hasAnchor" number="3.3">
 <h2><span class="header-section-number">3.3</span> Missing value analysis<a href="data.html#missing-value-analysis" class="anchor-section" aria-label="Anchor link to header"></a></h2>
 <p>We performed analysis on missing values to see if there are any patterns of the missing data.</p>
-<p>We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of each feature, we can see that “TRANSIT_DISTRICT” (transit district in which the offense occurred) and “HOUSING_PSA” (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as “PD_CD” (internal classification code) and “JURISDICTION_CODE”, but the percentages are below 1%, which are not explicitly displayed in the plot.</p>
-<p><img src="finalproj_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-<p>In addition to the percentage of missing values in each feature, we can also show the missing patterns. There are 8 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it’s impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.</p>
+<p>We first wanted to know the amount of missing data in each feature and which feature(s) contain insufficient data to perform the analysis with. From the distribution of missing data of features with missing values, we can see that “TRANSIT_DISTRICT” (transit district in which the offense occurred) and “HOUSING_PSA” (development level code) have about 97% and 30% of missing rows separately, which are the top two features with missing values among 35 features. There are also other features with rows missing values, such as “PD_CD” (internal classification code) and “JURISDICTION_CODE”, but the percentages are below 1%, which are not explicitly displayed in the plot.</p>
+<p><img src="finalproj_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+<p>In addition to the percentage of missing values in each feature, we can also show the missing patterns. By choosing four variables with largest number of missing values, there are 6 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it’s impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.</p>
 <p><img src="finalproj_files/figure-html/unnamed-chunk-10-1.png" width="672" /></p>
 
 </div>
