@@ -2,28 +2,28 @@
 
 When traveling to live and study in a new area, safety is closely related to us and is one of our top concerns. Thus, our project analyzes NYPD Complaint Data Historic and visualizes the number of crimes, crime areas, crime types, and the characteristics of suspects and victims.
 
-1.	What are the characteristics of crime volume trends over time?
+*1.	*What are the characteristics of crime volume trends over time?
 
 From the perspective of year, the trend in the number of crimes per year is similar, with lower numbers at the beginning and end of the year and higher numbers in the middle of the year. In terms of months, the number of crimes was the least in February, this may be because February is the month with the fewest days. It could also be because of the Super Bowl! Twice as many crimes occur at day than during the night, this is because most crimes are misdemeanors like theft, which occur more during the day. Although there are fewer crimes at night, most of the crimes are felonies.
 
-2.	What are the most frequent offenses?
+*2.	*What are the most frequent offenses?
 
 Petit Larceny, Harassment and Assault are the most reported crimes. 
 
-3.	Which area has the most crimes? 
+*3.	*Which area has the most crimes? 
 
 Brooklyn had the highest crime rate, while Staten Island had the lowest. This may be due to population differences. Viewed from map, Manhattan and Bronx has densest crime. From the heatmap, Times Square area is the most crime-intensive place, but in-depth analysis of crime types in this area is Petit Larceny. Crowds are more prone to have offense.
 
-4.	What are the characteristics of suspects and victims?
+*4.	*What are the characteristics of suspects and victims?
 
 People are more likely to be attacked by suspects who are similar to themselves, regardless of age, sex or race.
 
-5.	Where are the safest regions to live in Manhattan?
+*5.	*Where are the safest regions to live in Manhattan?
 
 It looks like that the west side of Manhattan has fewer cases and is safer than the east side. The Midlands is less crime-intensive than Uptown and Downtown. Central Park has minimal crime but no residential areas. There is also a blank area in the upper left corner of the map, which is the location of Columbia University. Living near the school is also safer than other places.
 
-Suggestions: 
+*6. *Suggestions: 
 
 In the case of people gathering, students need to pay more attention to their safety. It is a good choice to live near Central Park West, midtown Manhattan and Columbia University. Most of the crimes are more like temporary crimes, it is more difficult to prevent them. But most of them do not threaten the safety of life, and if necessary, part of the properties can be lost in exchange for safety.
 
-Hoping everyone stay away from offenses and stay safe!
+<center><b>Hoping everyone stay away from offenses and stay safe!</b></center>
