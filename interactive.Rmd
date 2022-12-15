@@ -1,3 +1,8 @@
 # Interactive component
 
 
+Here is the link for the d3 interactive graphs. https://vizhub.com/HJQ2000/1d9a9d8c1736439b8fadedce320654e7
+
+It is a combination of bar plot and 2d histogram to show count and density for top frequency crimes in each borough. It gives freedom to see crime counts for crime types that we are interested in. Experimenting with the crime types, we found that even Brooklyn has the most crimes happened in numbers in total, Manhattan has higher occurance of larceny.
+
+If one or some crime types are chosen, clicking on each bar will create a 2d histogram showing the density of the crime types chosen at the borough clicked on. If too mnay crimes type are chosen, it might take a while to generate.
