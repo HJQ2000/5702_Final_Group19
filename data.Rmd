@@ -1,14 +1,11 @@
 # Data 
 
 ## Sources
-https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i
+We’d like to find integrated data sets from the official website for research. Such data is more comprehensive and accurate, and it is also conducive to our data processing and analysis. Thus we choose NYC OpenData as our data sources. We tried to find data related to violence in New York City, so we decided to use complaint data of crime in NYC.
 
-We’d like to find integrated data sets from the official website for research. Such data is more comprehensive and accurate, and it is also conducive to our data processing and analysis. Thus we choose NYC OpenData as our data sources. We tried to find data related to violence in New York City, so we decided to use complaint data of crime in NYC. The data is provided and maintained by the New York Police Department (NYPD), owned by NYC OpenData. This data is manually extracted every quarter and reviewed by the NYPD. Each record represents a criminal complaint in NYC and includes information about the type of crime, the location and time of enforcement. It can be directly downloaded from the NYC OpenData website in the CSV format, so we can simply import the CSV file. The dataset contains valid felony, misdemeanor, and violation crimes reported to the NYPD from 2006 to the end of 2019. If we have any questions about the data, we can send a note to NYC OpenData (NYC Open Data - Contact Us (https://opendata.cityofnewyork.us/engage/)). 
+The dataset contains valid felony, misdemeanor, and violation crimes reported to the NYPD from 2006 to the end of 2019. Each record represents a criminal complaint in NYC. There are 35 columns including features like the type of crime, the location and time of enforcement, and the suspect and victim information. If we have any questions about the data, we can send a note to NYC OpenData (NYC Open Data - Contact Us (https://opendata.cityofnewyork.us/engage/)). 
 
-Known issues relating to data quality:
-The dataset contains some null values, because the data was not collected or not available at the time of report. This may lead to bias in our study of the distribution of the data.
-The dataset is released based on the date the incident was reported, but some crimes may have occurred years before they were reported. 
-Some crimes that were not able to be geo-coded have been located as occurring at the police station house within the precinct of occurrence. This will cause a certain bias in the geographical analysis, but this bias can be avoided by appropriately expanding the geographical scope when grouping.
+There are several known issues relating to data quality. First, the dataset contains some null values, if the data was not collected or not available at the time of report. This may lead to bias in our study of the distribution of the data. Second, the dataset is released based on the date the incident was reported, but some crimes may have occurred years before they were reported. Also, some crimes that were not able to be geo-coded at the crime spot have been recorded as occurring at the police station house within the precinct of occurrence. This will cause a certain bias in the geographical analysis, but this bias can be avoided by appropriately expanding the geographical scope when grouping.
 
 ## Cleaning / transformation
 
@@ -39,13 +36,8 @@ We first wanted to know the amount of missing data in each feature and which fea
 ```{r}
 data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 df<-as.data.frame(data)
-#df %>% summarise_all(funs(n_distinct(.)))
 col_missing <- colSums(is.na(df)) %>% sort(decreasing = TRUE)
 col_missing = (col_missing/nrow(df))*100
-```
-
-```{r}
-#col_missing
 ```
 
 
@@ -54,26 +46,19 @@ tidy_missing =
     as.data.frame(col_missing) %>% 
     rownames_to_column("id") %>% 
     gather(key, value, -id) 
-#tidy_missing$id <- as.factor(tidy_missing$id)
-```
 
-
-```{r}
 ggplot(tidy_missing[tidy_missing$value>0,], aes(x=fct_rev(fct_reorder(id,value,.desc = FALSE)),y=value)) +
 geom_bar(stat='identity',fill = "cornflowerblue") +
 #scale_x_discrete(breaks = levels(tidy_missing$id)[c(T,T, rep(F, 33))]) +
 scale_x_discrete(guide = guide_axis(n.dodge=3))+
 xlab("") + 
 ylab("Percentage of Missing Rows")
-    
 ```
-
 
 In addition to the percentage of missing values in each feature, we can also show the missing patterns. By choosing four variables with largest number of missing values, there are 6 missing patterns in the dataset, where about 65% of rows belong to the first pattern and over 25% of rows in the second pattern. Therefore, there are lots of rows missing data in several features, as it's impossible to fill these values as they are categorial features with text data, so we decided to remove them in the analysis.
 
 
 ```{r}
-#colnames(df) <- seq(1,length(colnames(df)))
 plot_missing(df[,c(tidy_missing[tidy_missing$value>0,]$id)][,1:4], percent = TRUE)
 ```
 

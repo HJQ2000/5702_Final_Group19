@@ -1,7 +1,10 @@
 # Proposal
 
 ## Research topic
-Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Is it safe to live in New York City? Where are the safest regions to live in terms of low violence?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we care about. 
+Our project focuses on researching the safety situation in the New York City. We aim to answer questions like "Where are the safest regions to live in terms of low violence? What kind of crimes happen in the city? Where do they usually occur and how serious are they?". In the metropolitan areas, the safety concern is shown as the occurrence of the crime. The time and location of the crime occurrence, types of crimes conducted, information about criminals and suspects, crime occurrence frequency are possible factors we care about. 
 
 ## Data availability
-NYPD Complaint Data Historic data is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). and narrow down the date range to most Srecent 3 years that the dataset includes (2017/01/01-2020/01/01).
+We use the NYPD Complaint Data Historic data, which is available on the NYC OpenData website (https://data.cityofnewyork.us/Public-Safety/NYPD-Complaint-Data-Historic/qgea-i56i). 
+The data is provided and maintained by the New York Police Department (NYPD), owned by NYC OpenData. It is manually extracted every quarter and reviewed by the NYPD. The data can be exported in different formats, including CSV, CSV for Excel, XML, RDF, and RSS.
+
+The dataset can be directly downloaded from the website or with API. For this project, we are more interested in the information in recent years, so we narrow down the date range to 2017/01/01-2020/01/01. We plan to select the specific date range on the website and directly download the dataset from the website in CSV format.

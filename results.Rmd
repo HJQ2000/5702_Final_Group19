@@ -4,9 +4,9 @@ Here, we analyze each variable one by one to see how the crime rate changes unde
 
 
 ```{r}
-data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
+#data=read.csv("D:/Desktop/GR5702/Final/NYPD_Complaint_Data_Historic.csv")
 #data=read.csv("~/Desktop/NYPD_Complaint_Data_Historic.csv")
-#data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
+data=read.csv("~/NYPD_Complaint_Data_Historic.csv")
 ```
 
 ```{r}
@@ -34,7 +34,9 @@ From the Time Series plot, we found that the year-to-year crime trends were simi
 t6<-as.data.frame(table(data$RPT_DT))
 t6$Var1<-as.Date(t6$Var1,"%m/%d/%Y")
 ggplot(t6, aes(x=Var1, y=Freq)) +
-  geom_line()
+  geom_line()+
+  xlab("Time") + ylab("Crime Counts") +
+  ggtitle("Number of Crimes Over Year")
 ```
 
 Therefore, we break down the number of crimes by month. And defined 8:00-20:00 is the time period for "day" and the rest as "night". 
@@ -46,16 +48,18 @@ data$t<-str_sub(data$CMPLNT_FR_TM,1,2)
 data$t<-as.numeric(data$t)
 data$day<-ifelse(data$t>=8 & data$t<=20,"day","night")
 t1<-as.data.frame(table(data$month,data$day))
-colnames(t1)<-c("month","time","Freq")
+colnames(t1)<-c("Month","Time","Freq")
 
-ggplot(t1, aes(x = month , y = Freq)) +
+ggplot(t1, aes(x = Month , y = Freq)) +
   geom_bar(
-    aes(color = time, fill = time),
+    aes(color = Time, fill = Time),
     stat = "identity", position = position_dodge(0.8),
     width = 0.7
   ) +
-  facet_wrap(~time,nrow=2)
+  facet_wrap(~Time,nrow=2) +
+  ylab("Crime Counts")
 ```
+
 
 ### OFNS_DESC
 
@@ -70,9 +74,8 @@ colnames(t2)<-c("crimes","level","Freq")
 x<-subset(t2,t2$Freq>500)
 ggplot(x,aes(x=Freq,y=reorder(crimes,Freq),fill=level))+
   geom_point(aes(color=level))+
-  ggtitle("crimes in offense category") +
-  xlab("counts") +
-  ylab("")
+  ggtitle("Crimes in offense category") +
+  xlab("counts")
 ```
 
 ### LAW_CAT_CD, BORO_NM
@@ -87,8 +90,10 @@ t1<-as.data.frame(table(data$BORO_NM,data$LAW_CAT_CD))
 t1<-t1[t1$Var1!="",]
 ggplot(t1, aes(x = Freq ,y=reorder(Var1,Freq),fill=Var2)) + 
   geom_bar(stat='identity')+
-  ylab("crime counts")+
-  xlab("Borough")
+  ylab("Borough")+
+  xlab("Crime Counts")+
+  labs(fill="Level of Offense")+
+  ggtitle("Number of Crimes in Each Borough")
 ```
 
 ### PREM_TYP_DESC
@@ -117,7 +122,7 @@ data.frame(d)  %>%
     , color = list(  
       colorBy = "premise"  
       ,colorScale = "scaleOrdinal"  
-      ,colorScheme = "schemeCategory10"  
+      ,colorScheme = "schemeCategory10"
     )  
     , withD3 = TRUE  
   )
@@ -130,9 +135,13 @@ As we can see from the histogram of crime frequency count corresponding to latit
 
 ```{r}
 p1 <- ggplot(data, aes(x=Latitude))+
-  geom_histogram(binwidth=0.005)
+  geom_histogram(binwidth=0.005)+
+  ylab("Crime Counts")+
+  ggtitle("Number of Crimes across Latitude")
 p2 <- ggplot(data, aes(x=Longitude))+
-  geom_histogram(binwidth=0.005)
+  geom_histogram(binwidth=0.005)+
+  ylab("Crime Counts")+
+  ggtitle("Number of Crimes across Longtitude")
 ggplotly(p1)
 ggplotly(p2)
 ```
@@ -141,13 +150,15 @@ From the scatter plot and 2D histogram, we can see that Manhattan and Bronx has 
 
 ```{r}
 ggplot(data, aes(x=Longitude, y=Latitude, color=BORO_NM))+
-  geom_point(size=0.005, alpha=0.0075,show.legend =FALSE)
+  geom_point(size=0.005, alpha=0.0075,show.legend =FALSE)+
+  ggtitle("Incidents in Different Borough in NYC")
 ```
 
 ```{r}
 ggplot(data, aes(x=Longitude, y=Latitude))+
   geom_bin2d(binwidth=c(0.005, 0.005))+
-  scale_fill_distiller(palette="YlOrRd", direction=1)
+  scale_fill_distiller(palette="YlOrRd", direction=1)+
+  ggtitle("Number of Crimes Distributed in NYC")
 ```
 
 
@@ -187,17 +198,17 @@ data1$VIC_AGE_GROUP<-ifelse(data1$VIC_AGE_GROUP=="<18","<18",
 t2<-as.data.frame(table(data1$SUSP_AGE_GROUP))
 t3<-as.data.frame(table(data1$VIC_AGE_GROUP))
 t2_t3<-merge(t2,t3,by="Var1")
-colnames(t2_t3)<-c("age","susp",'vic')
-tidyt<-t2_t3%>%pivot_longer(cols=!age,names_to = "type",values_to = "count")
-ggplot(tidyt, aes(x = age, y = count)) +
+colnames(t2_t3)<-c("Age","Suspect",'Victim')
+tidyt<-t2_t3%>%pivot_longer(cols=!Age,names_to = "type",values_to = "Count")
+ggplot(tidyt, aes(x = Age, y = Count)) +
   geom_bar(
     aes(color = type, fill = type),
     stat = "identity", position = position_dodge(0.8),
     width = 0.7
   )+
-  facet_wrap(~type)
+  facet_wrap(~type)+
+  ggtitle("Number of crimes in different age groups of suspects and victims")
 ```
-
 
 
 ### Race
@@ -211,12 +222,15 @@ Sorted by suspect's race, ignoring UNKNOWN group, We found that the race with th
 t4<-as.data.frame(table(data1$SUSP_RACE))
 t5<-as.data.frame(table(data1$VIC_RACE))
 t4_t5<-merge(t4,t5,by="Var1")
-colnames(t4_t5)<-c("race","susp",'vic')
+colnames(t4_t5)<-c("race","Suspect",'Victim')
 tidyt<-t4_t5%>%pivot_longer(cols=!race,names_to = "type",values_to = "count")
 
 library(forcats)
-ggplot(tidyt,aes(x=count,y=fct_reorder2(race,type=="susp",count,.desc=FALSE)))+
-  geom_point(aes(color=type),size=3)
+ggplot(tidyt,aes(x=count,y=fct_reorder2(race,type=="Victim",count,.desc=FALSE)))+
+  geom_point(aes(color=type),size=3)+
+  xlab("Crime Counts")+
+  ylab("Race")+
+  ggtitle("Number of crimes in different race groups of suspects and victims")
 ```
 
 
@@ -258,7 +272,10 @@ ggplot(data1_race_freq, aes(axis1=SUSP_RACE, axis2=VIC_RACE, y=Freq))+
   geom_flow(aes(fill=VIC_RACE))+
   geom_stratum()+
   geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
-  scale_x_discrete(limits=c("susp_race", "vic_race"))
+  scale_x_discrete(limits=c("Suspect", "Victim"))+
+  ylab("Crime Counts")+
+  labs(fill="Race Group")
+  
 ```
 
 ```{r}
@@ -272,7 +289,9 @@ ggplot(data1_age_freq, aes(axis1=SUSP_AGE_GROUP, axis2=VIC_AGE_GROUP, y=Freq))+
   geom_flow(aes(fill=SUSP_AGE_GROUP))+
   geom_stratum()+
   geom_text(stat="stratum", aes(label=paste(after_stat(stratum), "\n", after_stat(count))), size=2)+
-  scale_x_discrete(limits=c("susp_age_group", "vic_age_group"))
+  scale_x_discrete(limits=c("Suspect", "Victim"))+
+  ylab("Crime Counts")+
+  labs(fill="Age Group")
 ```
 
 ## WHAT'S ABOUT MANHATTAN
